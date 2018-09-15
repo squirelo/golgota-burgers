@@ -93,7 +93,7 @@ void setup() {
 
 void loop() {
 
- readTouchInputs();
+  readTouchInputs();
   int sensorVal = digitalRead(A0);            // read and remember whatever info (whether pressed or not) coming from the button, will be either 1 or 0
 
 
@@ -127,7 +127,7 @@ void loop() {
 
       int burgerpairIndex;                        // burgerpairIndex will receive the value of selection or input depending on which one is the lowest
 
-      
+
 
       if (input_value < selection) {
         burgerpairIndex = input_value;
@@ -138,34 +138,34 @@ void loop() {
         Serial.println(burgerpairIndex);*/
 
       if (burgerpairIndex == 0) {
-          // delay(300);
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair0 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-        } else if (burgerpairIndex == 1) {
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair1 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-        } else if (burgerpairIndex == 2) {
-          // delay(300);
-          MP3player.playTrack(15);
-          Serial.println("Burgerpair2 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-        } else if (burgerpairIndex == 3) {
-          // delay(300);
-          MP3player.playTrack(15);
-          Serial.println("Burgerpair3 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-        } else if (burgerpairIndex == 4) {
-          // delay(300);
-          MP3player.playTrack(15);
-          Serial.println("Burgerpair4 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-        } else if (burgerpairIndex == 5) {
-          // delay(300);
-          MP3player.playTrack(15);
-          Serial.println("Burgerpair5 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-          }
+        // delay(300);
+        MP3player.stopTrack();
+        MP3player.playTrack(9);
+        Serial.println("Burgerpair0 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      } else if (burgerpairIndex == 1) {
+        MP3player.stopTrack();
+        MP3player.playTrack(9);
+        Serial.println("Burgerpair1 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      } else if (burgerpairIndex == 2) {
+        // delay(300);
+        MP3player.playTrack(15);
+        Serial.println("Burgerpair2 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      } else if (burgerpairIndex == 3) {
+        // delay(300);
+        MP3player.playTrack(15);
+        Serial.println("Burgerpair3 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      } else if (burgerpairIndex == 4) {
+        // delay(300);
+        MP3player.playTrack(15);
+        Serial.println("Burgerpair4 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      } else if (burgerpairIndex == 5) {
+        // delay(300);
+        MP3player.playTrack(15);
+        Serial.println("Burgerpair5 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
+      }
 
 
-        
+
       if (burgerpair[burgerpairIndex] == false) { // if the pair hasn't been already selected:
 
         burgerpair[burgerpairIndex] = true;         // remember which pair was selected
@@ -176,110 +176,109 @@ void loop() {
         Serial.println("You win 1 point");
 
 
-                  // MP3player.playTrack(12);
+        // MP3player.playTrack(12);
 
-                  totalpairs = 0;                             // reset variable to add up all pairs which were found so far
-                  for (int i = 0; i < 6; i++) {               // count with i from 0 to 5
-                    totalpairs += burgerpair[i];              // add array values
-                  }
+        totalpairs = 0;                             // reset variable to add up all pairs which were found so far
+        for (int i = 0; i < 6; i++) {               // count with i from 0 to 5
+          totalpairs += burgerpair[i];              // add array values
+        }
 
-                } else {
-                  Serial.println("But unfortunately this is a pair you already found");
-                  Serial.println("You loose 1 point");
-                  //delay(10050);
-                  //MP3player.playTrack(15);
-                  score = score - 1;                        // deduct 1 point from the score
-                  selection = -1;                           // reset the selection, so we can start again with a new pair
-                }
-                Serial.print("Total pairs found so far: ");
-                Serial.println(totalpairs);
-                if (totalpairs == 6) {
-                  Serial.print("You found all the pairs! You, winner! ");
-                  Serial.println("Game will restart automatically. ");
-                  //delay(10050);
-                  //MP3player.playTrack(13);
-                  totalpairs = 0;                             // reset variable to start the game again
-                }
+      } else {
+        Serial.println("But unfortunately this is a pair you already found");
+        Serial.println("You loose 1 point");
+        //delay(10050);
+        //MP3player.playTrack(15);
+        score = score - 1;                        // deduct 1 point from the score
+        selection = -1;                           // reset the selection, so we can start again with a new pair
+      }
+      Serial.print("Total pairs found so far: ");
+      Serial.println(totalpairs);
+      if (totalpairs == 6) {
+        Serial.print("You found all the pairs! You, winner! ");
+        Serial.println("Game will restart automatically. ");
+        //delay(10050);
+        //MP3player.playTrack(13);
+        totalpairs = 0;                             // reset variable to start the game again
+      }
 
+    } else {
+      Serial.println("This is not a pair, booh!");
+      Serial.println("You loose 1 point");
+      score = score - 1;                        // subscract 1 point to the score
+      selection = -1;                           // reset the selection, so we can start again with a new pair
+    }
+
+    Serial.print("Your score is now: ");
+    Serial.println(score);
+    Serial.println("====================");
+
+  }
+
+
+
+
+}
+
+
+void readTouchInputs() {
+  input = false;
+  if (MPR121.touchStatusChanged()) {
+
+    MPR121.updateTouchData();
+
+    // only make an action if we have one or fewer pins touched
+    // ignore multiple touches
+
+    if (MPR121.getNumTouches() <= 1) {
+      for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
+        if (MPR121.isNewTouch(i)) {
+
+          //pin i was just touched
+          // Serial.print("pin ");
+          // Serial.print(i);
+          input_value = i;
+          input = true;
+          //Serial.println(" was just touched");
+          digitalWrite(LED_BUILTIN, HIGH);
+
+          if (i <= lastPin && i >= firstPin) {
+            if (MP3player.isPlaying()) {
+              if (lastPlayed == i && !REPLAY_MODE) {
+                // if we're already playing the requested track, stop it
+                // (but only if we're not in REPLAY_MODE)
+                MP3player.stopTrack();
+                //     Serial.print("stopping track ");
+                //     Serial.println(i-firstPin);
               } else {
-                Serial.println("This is not a pair, booh!");
-                Serial.println("You loose 1 point");
-                score = score - 1;                        // subscract 1 point to the score
-                selection = -1;                           // reset the selection, so we can start again with a new pair
+                // if we're already playing a different track (or we're in
+                // REPLAY_MODE), stop and play the newly requested one
+                MP3player.stopTrack();
+                MP3player.playTrack(i - firstPin);
+                //   Serial.print("playing track ");
+                //   Serial.println(i-firstPin);
+
+                // don't forget to update lastPlayed - without it we don't
+                // have a history
+                lastPlayed = i;
               }
-
-              Serial.print("Your score is now: ");
-              Serial.println(score);
-              Serial.println("====================");
-
-            }
-
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////////////// your program ends here
-          }
-
-
-          void readTouchInputs() {
-            input = false;
-            if (MPR121.touchStatusChanged()) {
-
-              MPR121.updateTouchData();
-
-              // only make an action if we have one or fewer pins touched
-              // ignore multiple touches
-
-              if (MPR121.getNumTouches() <= 1) {
-                for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
-                  if (MPR121.isNewTouch(i)) {
-
-                    //pin i was just touched
-                    // Serial.print("pin ");
-                    // Serial.print(i);
-                    input_value = i;
-                    input = true;
-                    //Serial.println(" was just touched");
-                    digitalWrite(LED_BUILTIN, HIGH);
-
-                    if (i <= lastPin && i >= firstPin) {
-                      if (MP3player.isPlaying()) {
-                        if (lastPlayed == i && !REPLAY_MODE) {
-                          // if we're already playing the requested track, stop it
-                          // (but only if we're not in REPLAY_MODE)
-                          MP3player.stopTrack();
-                          //     Serial.print("stopping track ");
-                          //     Serial.println(i-firstPin);
-                        } else {
-                          // if we're already playing a different track (or we're in
-                          // REPLAY_MODE), stop and play the newly requested one
-                          MP3player.stopTrack();
-                          MP3player.playTrack(i - firstPin);
-                          //   Serial.print("playing track ");
-                          //   Serial.println(i-firstPin);
-
-                          // don't forget to update lastPlayed - without it we don't
-                          // have a history
-                          lastPlayed = i;
-                        }
-                      } else {
-                        // if we're playing nothing, play the requested track
-                        // and update lastplayed
-                        MP3player.playTrack(i - firstPin);
-                        // Serial.print("playing track ");
-                        // Serial.println(i-firstPin);
-                        lastPlayed = i;
-                      }
-                    }
-                  } else {
-                    if (MPR121.isNewRelease(i)) {
-                      /*  Serial.print("pin ");
-                        Serial.print(i);
-                        Serial.println(" is no longer being touched");
-                      */  digitalWrite(LED_BUILTIN, LOW);
-                    }
-                  }
-                }
-              }
+            } else {
+              // if we're playing nothing, play the requested track
+              // and update lastplayed
+              MP3player.playTrack(i - firstPin);
+              // Serial.print("playing track ");
+              // Serial.println(i-firstPin);
+              lastPlayed = i;
             }
           }
+        } else {
+          if (MPR121.isNewRelease(i)) {
+            /*  Serial.print("pin ");
+              Serial.print(i);
+              Serial.println(" is no longer being touched");
+            */  digitalWrite(LED_BUILTIN, LOW);
+          }
+        }
+      }
+    }
+  }
+}
