@@ -92,25 +92,9 @@ void setup() {
 }
 
 void loop() {
-  readTouchInputs();
-  /////////////////////////////////////////////////////////////////////////////////////////// your program starts here
-  /* if (input) {
-     Serial.print("burger ");
-     Serial.print(input_value);
-     Serial.println(" is touched");
-    } */
-
-  ///////////////
 
 
-  ////////////////////////////////////////////// BUTTON TO RESET GAME BEGIN
   int sensorVal = digitalRead(A0);            // read and remember whatever info (whether pressed or not) coming from the button, will be either 1 or 0
-
-
-  // the pull-up means the pushbutton's logic is inverted. It goes
-  // HIGH when it's open, and LOW when it's pressed.
-  // when the button's pressed, the game should be reset to start again
-  // Turn on pin 13 when the button's pressed (LOW), and off when it's not:
 
 
   if (sensorVal != buttonState) {         // if the button state has changed, compare the current value of the button with the button state
@@ -121,11 +105,6 @@ void loop() {
       MP3player.playTrack(16); // is supposed to play the audio explanation of the game
     }
   }
-
-
-
-  ////////////////////////////////////////////// BUTTON TO RESET GAME ENDS
-
 
 
 
@@ -159,28 +138,30 @@ void loop() {
         Serial.println(burgerpairIndex);*/
 
       if (burgerpairIndex == 0) {
-          delay(300);
-          MP3player.playTrack(0);
-          Serial.println("Is playing explanation after the 2nd burger is pressed");    // print the successful message
+          // delay(300);
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair0 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
         } else if (burgerpairIndex == 1) {
-          delay(300);
-          MP3player.playTrack(0);
-          Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair1 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
         } else if (burgerpairIndex == 2) {
-          delay(300);
-          MP3player.playTrack(0);
-          Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
+          // delay(300);
+          MP3player.playTrack(15);
+          Serial.println("Burgerpair2 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
         } else if (burgerpairIndex == 3) {
-          delay(300);
-          MP3player.playTrack(20);
-          Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
+          // delay(300);
+          MP3player.playTrack(15);
+          Serial.println("Burgerpair3 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
         } else if (burgerpairIndex == 4) {
-          delay(300);
-          MP3player.playTrack(21);
-          Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
+          // delay(300);
+          MP3player.playTrack(15);
+          Serial.println("Burgerpair4 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
         } else if (burgerpairIndex == 5) {
-          delay(300);
-          MP3player.playTrack(22);
+          // delay(300);
+          MP3player.playTrack(15);
+          Serial.println("Burgerpair5 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
           }
 
 
@@ -233,7 +214,7 @@ void loop() {
 
             }
 
-
+ readTouchInputs();
 
 
             /////////////////////////////////////////////////////////////////////////////////////////// your program ends here
