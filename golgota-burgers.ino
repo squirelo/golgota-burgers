@@ -118,27 +118,8 @@ void loop() {
     if (sensorVal == LOW) {                // only reset the game if switch is pressed (LOW)
       Serial.println("+++++ reset button was pushed +++++");
       delay(25);
-
       MP3player.playTrack(16); // is supposed to play the audio explanation of the game
-
-      // start the game by reseting all the var
-      selection = -1;                             // reset variable as if nothing as been pressed before aka burger1
-      input_value = -1;                           // reset variable as if nothing as been pressed on a second position aka burger2
-      score = 100;                                // reset score to 100
-      input = false;                      // keeps track wether burger was pushed or not
-
-      //* burgerpair[] = {0, 0, 0, 0, 0, 0};  // assign false value to burger pair 0...5
-      burgerpair[0] = 0;                      // reset value to 0 for all pairs
-      burgerpair[1] = 0;
-      burgerpair[2] = 0;
-      burgerpair[3] = 0;
-      burgerpair[4] = 0;
-      burgerpair[5] = 0;
-
-      totalpairs = 0;
     }
-
-
   }
 
 
