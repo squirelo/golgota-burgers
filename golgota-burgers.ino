@@ -74,8 +74,8 @@ void setup() {
   if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
   MPR121.setInterruptPin(MPR121_INT);
 
-  MPR121.setTouchThreshold(4);      // en standard en 40, changé à 8
-  MPR121.setReleaseThreshold(2);   // en standard en 20, changé à 4
+  MPR121.setTouchThreshold(4);      // allows to correct the sensitivity of the touch when pressed — en standard en 40, changé à 8
+  MPR121.setReleaseThreshold(2);   // allows to correct the sensitivity of the touch when released — en standard en 20, changé à 4
 
   result = MP3player.begin();
   MP3player.setVolume(0, 0);      // instead of initial 10
@@ -160,15 +160,15 @@ void loop() {
 
       if (burgerpairIndex == 0) {
           delay(300);
-          MP3player.playTrack(17);
+          MP3player.playTrack(0);
           Serial.println("Is playing explanation after the 2nd burger is pressed");    // print the successful message
         } else if (burgerpairIndex == 1) {
           delay(300);
-          MP3player.playTrack(18);
+          MP3player.playTrack(0);
           Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
         } else if (burgerpairIndex == 2) {
           delay(300);
-          MP3player.playTrack(19);
+          MP3player.playTrack(0);
           Serial.println("Is playing explanation after the 2nd burger is presssed");    // print the successful message
         } else if (burgerpairIndex == 3) {
           delay(300);
