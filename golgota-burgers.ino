@@ -93,7 +93,7 @@ void setup() {
 
 void loop() {
 
-
+ readTouchInputs();
   int sensorVal = digitalRead(A0);            // read and remember whatever info (whether pressed or not) coming from the button, will be either 1 or 0
 
 
@@ -214,7 +214,7 @@ void loop() {
 
             }
 
- readTouchInputs();
+
 
 
             /////////////////////////////////////////////////////////////////////////////////////////// your program ends here
