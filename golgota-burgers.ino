@@ -177,6 +177,7 @@ void checkPair() {
         Serial.println("this is a new pair");
 
       } else {
+        Serial.println("This is not a pair, booh!");
         selection = -1;                           // reset the selection, so we can start again with a new pair
       }
     }
