@@ -118,22 +118,22 @@ void manageInputs() {
 }
 
 void checkPair() {
-
+  
+  p = input_value + selection;
+  
   // check if the pair = 11
-  if (input_value + selection == 11) {           // if the sum of the 2 burgers index is 11, then this is a pair
-    Serial.println("You've got a pair, congrats!");    // print the successful message
-    
-    if (input_value < selection) {
-      burgerpairIndex = input_value;
-      selection = -1; 
-    } 
-    
-    else {
-      burgerpairIndex = selection;
-      selection = -1; 
-    }
+  if (p == 11 && input_value < selection) {           // if the sum of the 2 burgers index is 11, then this is a pair
+    Serial.println("You've got a pair, congrats!");
+    burgerpairIndex = input_value;
+    selection = -1;
   }
-}
+  else if (p' == 11 && input_value > selection) {
+    Serial.println("You've got a pair, congrats!");
+    burgerpairIndex = selection;
+    selection = -1;
+    }
+ }
+
 
 void playSong() {
   input = false;
@@ -146,7 +146,7 @@ void playSong() {
     if (MPR121.getNumTouches() <= 1) {
       for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
         if (MPR121.isNewTouch(i)) {
-          
+
           input_value = i;
           input = true;
           Serial.print("burger ");
@@ -155,41 +155,41 @@ void playSong() {
           digitalWrite(LED_BUILTIN, HIGH);
 
           if (i <= lastPin && i >= firstPin) {
-            
+
             if (MP3player.isPlaying() && burgerpairIndex == -1) {
-              
+
               if (lastPlayed == i && !REPLAY_MODE) {
                 // if we're already playing the requested track, stop it
                 // (but only if we're not in REPLAY_MODE)
                 MP3player.stopTrack();
-              } 
-              
+              }
+
               else {
                 // if we're already playing a different track (or we're in
                 // REPLAY_MODE), stop and play the newly requested one
                 MP3player.stopTrack();
-                MP3player.playTrack(i - firstPin);   
+                MP3player.playTrack(i - firstPin);
                 lastPlayed = i;
               }
-            } 
+            }
 
-            else if (burgerpairIndex != -1) {  
+            else if (burgerpairIndex != -1) {
 
               // success mp3 numbers 20, 21, 22, 23, 24, 25
               int p = 20 + burgerpairIndex;
-              MP3player.stopTrack();             
+              MP3player.stopTrack();
               MP3player.playTrack(p);
               Serial.println( p + " just started");
               burgerpairIndex = -1;
             }
-            
-            else {  
+
+            else {
               MP3player.playTrack(i - firstPin);
               lastPlayed = i;
             }
           }
         } else if (MPR121.isNewRelease(i)) {
-           digitalWrite(LED_BUILTIN, LOW);
+          digitalWrite(LED_BUILTIN, LOW);
         }
       }
     }
