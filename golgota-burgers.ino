@@ -41,7 +41,6 @@ int lastButtonState = HIGH;   // the previous reading from the input pin
 int selection = -1;        // no burger has been pressed beforehand aka burger1
 int input_value = -1;      // no 2nd burger has been pressed yet aka burger2
 boolean input = false;     // keeps track wether burger was pushed or not
-boolean burgerpair[] = {0, 0, 0, 0, 0, 0}; // assign false value to burger pair 0...5
 int burgerpairIndex = -1;
 
 // start setup
