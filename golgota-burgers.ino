@@ -142,32 +142,38 @@ void checkPair() {
       /*Serial.print("This is pair number ");
         Serial.println(burgerpairIndex);*/
 
-      if (burgerpairIndex == 0) {
-        // delay(300);
-        MP3player.stopTrack();
-        MP3player.playTrack(9);
-        Serial.println("Burgerpair0 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      } else if (burgerpairIndex == 1) {
-        MP3player.stopTrack();
-        MP3player.playTrack(9);
-        Serial.println("Burgerpair1 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      } else if (burgerpairIndex == 2) {
-        // delay(300);
-        MP3player.playTrack(15);
-        Serial.println("Burgerpair2 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      } else if (burgerpairIndex == 3) {
-        // delay(300);
-        MP3player.playTrack(15);
-        Serial.println("Burgerpair3 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      } else if (burgerpairIndex == 4) {
-        // delay(300);
-        MP3player.playTrack(15);
-        Serial.println("Burgerpair4 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      } else if (burgerpairIndex == 5) {
-        // delay(300);
-        MP3player.playTrack(15);
-        Serial.println("Burgerpair5 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
-      }
+      switch (burgerpairIndex) {
+        case 0:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair0 is matched");
+          break;
+        case 1:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair1 is matched");
+          break;
+        case 2:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair2 is matched");
+          break;
+        case 3:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair3 is matched");
+          break;
+        case 4:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair4 is matched");
+          break;
+        case 5:
+          MP3player.stopTrack();
+          MP3player.playTrack(9);
+          Serial.println("Burgerpair5 is matched");
+    
+      }  
 
       if (burgerpair[burgerpairIndex] == false) { // if the pair hasn't been already selected:
 
