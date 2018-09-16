@@ -34,7 +34,7 @@ int lastPlayed = 0;
 // sd card instantiation
 SdFat sd;
 
-/////////////////////////////////////////////////////////////////////////////////////////// your global variables start here
+// global variables
 int buttonState;             // the current reading from the input pin
 int lastButtonState = HIGH;   // the previous reading from the input pin
 
@@ -42,15 +42,9 @@ int selection = -1;        // no burger has been pressed beforehand aka burger1
 int input_value = -1;      // no 2nd burger has been pressed yet aka burger2
 boolean input = false;     // keeps track wether burger was pushed or not
 boolean burgerpair[] = {0, 0, 0, 0, 0, 0}; // assign false value to burger pair 0...5
+int burgerpairIndex = -1;
 
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////// your global variables end here
-
+// start setup
 void setup() {
   Serial.begin(57600);
   Serial.println("+++++ setup starts +++++"); // setup starts
@@ -59,6 +53,7 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
+  // setup mp3
 
   //while (!Serial) ; {} //uncomment when using the serial monitor
   Serial.println("Bare Conductive Touch MP3 player");
@@ -68,8 +63,8 @@ void setup() {
   if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
   MPR121.setInterruptPin(MPR121_INT);
 
-  MPR121.setTouchThreshold(4);      // allows to correct the sensitivity of the touch when pressed — en standard en 40, changé à 8
-  MPR121.setReleaseThreshold(2);   // allows to correct the sensitivity of the touch when released — en standard en 20, changé à 4
+  MPR121.setTouchThreshold(4);      // allows to correct the sensitivity of the touch when pressed — en standard en 40, changé à 4
+  MPR121.setReleaseThreshold(2);   // allows to correct the sensitivity of the touch when released — en standard en 20, changé à 2
 
   result = MP3player.begin();
   MP3player.setVolume(0, 0);      // instead of initial 10
@@ -85,11 +80,13 @@ void setup() {
 
 }
 
+
+// start loop
 void loop() {
 
   intro();
-  readTouchInputs();
   manageInputs();
+  playSong();
 
 }
 
@@ -115,7 +112,7 @@ void manageInputs() {
     Serial.println(" is touched");
   }
 
-  if (input == true && selection > -1 && input_value != selection) { 
+  if (input == true && selection > -1 && input_value != selection) {
     checkPair();
 
   }
@@ -123,134 +120,77 @@ void manageInputs() {
 
 void checkPair() {
 
-    // check 1. sound played 2. if a burger has been pressed before 3. if the 2nd burger pressed is different from the 1st burger pressed
-    Serial.print("burger ");
-    Serial.print(input_value);
-    Serial.println(" is touched");
-
-    // check if the pair = 11
-    if (input_value + selection == 11) {           // if the sum of the 2 burgers index is 11, then this is a pair
-      Serial.println("You've got a pair, congrats!");    // print the successful message
-
-      int burgerpairIndex;                        // burgerpairIndex will receive the value of selection or input depending on which one is the lowest
-
-      if (input_value < selection) {
-        burgerpairIndex = input_value;
-      } else {
-        burgerpairIndex = selection;
-      }
-      /*Serial.print("This is pair number ");
-        Serial.println(burgerpairIndex);*/
-
-      switch (burgerpairIndex) {
-        case 0:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair0 is matched");
-          break;
-        case 1:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair1 is matched");
-          break;
-        case 2:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair2 is matched");
-          break;
-        case 3:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair3 is matched");
-          break;
-        case 4:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair4 is matched");
-          break;
-        case 5:
-          MP3player.stopTrack();
-          MP3player.playTrack(9);
-          Serial.println("Burgerpair5 is matched");
+  // check if the pair = 11
+  if (input_value + selection == 11) {           // if the sum of the 2 burgers index is 11, then this is a pair
+    Serial.println("You've got a pair, congrats!");    // print the successful message
     
-      }  
-
-      if (burgerpair[burgerpairIndex] == false) { // if the pair hasn't been already selected:
-
-        burgerpair[burgerpairIndex] = true;         // remember which pair was selected
-        selection = -1;                           // reset the selection, so we can start again with a new pair later
-
-        Serial.println("this is a new pair");
-
-      } else {
-        Serial.println("This is not a pair, booh!");
-        selection = -1;                           // reset the selection, so we can start again with a new pair
-      }
+    if (input_value < selection) {
+      burgerpairIndex = input_value;
+      selection = -1; 
+    } 
+    
+    else {
+      burgerpairIndex = selection;
+      selection = -1; 
     }
+  }
 }
 
-
-
-
-
-
-void readTouchInputs() {
+void playSong() {
   input = false;
   if (MPR121.touchStatusChanged()) {
 
     MPR121.updateTouchData();
-
     // only make an action if we have one or fewer pins touched
     // ignore multiple touches
 
     if (MPR121.getNumTouches() <= 1) {
       for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
         if (MPR121.isNewTouch(i)) {
-
-          //pin i was just touched
-          // Serial.print("pin ");
-          // Serial.print(i);
+          
           input_value = i;
           input = true;
-          //Serial.println(" was just touched");
+          Serial.print("burger ");
+          Serial.print(input_value);
+          Serial.println(" is touched");
           digitalWrite(LED_BUILTIN, HIGH);
 
           if (i <= lastPin && i >= firstPin) {
-            if (MP3player.isPlaying()) {
+            
+            if (MP3player.isPlaying() && burgerpairIndex == -1) {
+              
               if (lastPlayed == i && !REPLAY_MODE) {
                 // if we're already playing the requested track, stop it
                 // (but only if we're not in REPLAY_MODE)
                 MP3player.stopTrack();
-                //     Serial.print("stopping track ");
-                //     Serial.println(i-firstPin);
-              } else {
+              } 
+              
+              else {
                 // if we're already playing a different track (or we're in
                 // REPLAY_MODE), stop and play the newly requested one
                 MP3player.stopTrack();
-                MP3player.playTrack(i - firstPin);
-                //   Serial.print("playing track ");
-                //   Serial.println(i-firstPin);
-
-                // don't forget to update lastPlayed - without it we don't
-                // have a history
+                MP3player.playTrack(i - firstPin);   
                 lastPlayed = i;
               }
-            } else {
-              // if we're playing nothing, play the requested track
-              // and update lastplayed
+            } 
+
+            else if (burgerpairIndex != -1) {  
+
+              // success mp3 numbers 20, 21, 22, 23, 24, 25
+              int p = 20 + burgerpairIndex;
+              MP3player.stopTrack();             
+              MP3player.playTrack(p);
+              Serial.println( p + " just started");
+              burgerpairIndex = -1;
+            }
+            
+            else {  
               MP3player.playTrack(i - firstPin);
-              // Serial.print("playing track ");
-              // Serial.println(i-firstPin);
               lastPlayed = i;
             }
           }
-        } else {
-          if (MPR121.isNewRelease(i)) {
-            /*  Serial.print("pin ");
-              Serial.print(i);
-              Serial.println(" is no longer being touched");
-            */  digitalWrite(LED_BUILTIN, LOW);
-          }
+        } else if (MPR121.isNewRelease(i)) {
+           digitalWrite(LED_BUILTIN, LOW);
         }
       }
     }
