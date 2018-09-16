@@ -40,10 +40,8 @@ int lastButtonState = HIGH;   // the previous reading from the input pin
 
 int selection = -1;        // no burger has been pressed beforehand aka burger1
 int input_value = -1;      // no 2nd burger has been pressed yet aka burger2
-int score = 100;           // Everyone got assigned a score value of 100
 boolean input = false;     // keeps track wether burger was pushed or not
 boolean burgerpair[] = {0, 0, 0, 0, 0, 0}; // assign false value to burger pair 0...5
-int totalpairs = 0;
 
 
 
@@ -57,11 +55,7 @@ void setup() {
   Serial.begin(57600);
   Serial.println("+++++ setup starts +++++"); // setup starts
 
-  ////////////////////////////////////////////// BUTTON TO RESET GAME BEGIN
   pinMode(A0, INPUT_PULLUP);                    // button is on pin A0 + avoid debouncing
-
-
-  ////////////////////////////////////////////// BUTTON TO RESET GAME ENDS
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -93,10 +87,15 @@ void setup() {
 
 void loop() {
 
+  intro();
   readTouchInputs();
-  int sensorVal = digitalRead(A0);            // read and remember whatever info (whether pressed or not) coming from the button, will be either 1 or 0
+  manageInputs();
+
+}
 
 
+void intro() {
+  int sensorVal = digitalRead(A0);
   if (sensorVal != buttonState) {         // if the button state has changed, compare the current value of the button with the button state
     buttonState = sensorVal;
     if (sensorVal == LOW) {                // only reset the game if switch is pressed (LOW)
@@ -105,10 +104,10 @@ void loop() {
       MP3player.playTrack(16); // is supposed to play the audio explanation of the game
     }
   }
+}
 
 
-
-
+void manageInputs() {
   if (input == true && selection == -1) {     // check if 1. sound has been played when pressing on the burger 2. if no burger pressed before
     selection = input_value;                  // assign a new value to selection that is the id of the 2nd burger pressed
     Serial.print("burger ");
@@ -116,7 +115,15 @@ void loop() {
     Serial.println(" is touched");
   }
 
-  if (input == true && selection > -1 && input_value != selection) { // check 1. sound played 2. if a burger has been pressed before 3. if the 2nd burger pressed is different from the 1st burger pressed
+  if (input == true && selection > -1 && input_value != selection) { 
+    checkPair();
+
+  }
+}
+
+void checkPair() {
+
+    // check 1. sound played 2. if a burger has been pressed before 3. if the 2nd burger pressed is different from the 1st burger pressed
     Serial.print("burger ");
     Serial.print(input_value);
     Serial.println(" is touched");
@@ -126,8 +133,6 @@ void loop() {
       Serial.println("You've got a pair, congrats!");    // print the successful message
 
       int burgerpairIndex;                        // burgerpairIndex will receive the value of selection or input depending on which one is the lowest
-
-
 
       if (input_value < selection) {
         burgerpairIndex = input_value;
@@ -164,60 +169,22 @@ void loop() {
         Serial.println("Burgerpair5 is matched, explanation is playing after 2nd burger pressed?");    // print the successful message
       }
 
-
-
       if (burgerpair[burgerpairIndex] == false) { // if the pair hasn't been already selected:
 
         burgerpair[burgerpairIndex] = true;         // remember which pair was selected
-        score = score + 1;                        // add 1 point to the score
         selection = -1;                           // reset the selection, so we can start again with a new pair later
 
         Serial.println("this is a new pair");
-        Serial.println("You win 1 point");
-
-
-        // MP3player.playTrack(12);
-
-        totalpairs = 0;                             // reset variable to add up all pairs which were found so far
-        for (int i = 0; i < 6; i++) {               // count with i from 0 to 5
-          totalpairs += burgerpair[i];              // add array values
-        }
 
       } else {
-        Serial.println("But unfortunately this is a pair you already found");
-        Serial.println("You loose 1 point");
-        //delay(10050);
-        //MP3player.playTrack(15);
-        score = score - 1;                        // deduct 1 point from the score
         selection = -1;                           // reset the selection, so we can start again with a new pair
       }
-      Serial.print("Total pairs found so far: ");
-      Serial.println(totalpairs);
-      if (totalpairs == 6) {
-        Serial.print("You found all the pairs! You, winner! ");
-        Serial.println("Game will restart automatically. ");
-        //delay(10050);
-        //MP3player.playTrack(13);
-        totalpairs = 0;                             // reset variable to start the game again
-      }
-
-    } else {
-      Serial.println("This is not a pair, booh!");
-      Serial.println("You loose 1 point");
-      score = score - 1;                        // subscract 1 point to the score
-      selection = -1;                           // reset the selection, so we can start again with a new pair
     }
-
-    Serial.print("Your score is now: ");
-    Serial.println(score);
-    Serial.println("====================");
-
-  }
-
-
-
-
 }
+
+
+
+
 
 
 void readTouchInputs() {
