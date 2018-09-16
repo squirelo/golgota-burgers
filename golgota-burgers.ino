@@ -119,7 +119,7 @@ void manageInputs() {
 
 void checkPair() {
   
-  p = input_value + selection;
+  int p = input_value + selection;
   
   // check if the pair = 11
   if (p == 11 && input_value < selection) {           // if the sum of the 2 burgers index is 11, then this is a pair
@@ -127,7 +127,7 @@ void checkPair() {
     burgerpairIndex = input_value;
     selection = -1;
   }
-  else if (p' == 11 && input_value > selection) {
+  else if (p == 11 && input_value > selection) {
     Serial.println("You've got a pair, congrats!");
     burgerpairIndex = selection;
     selection = -1;
